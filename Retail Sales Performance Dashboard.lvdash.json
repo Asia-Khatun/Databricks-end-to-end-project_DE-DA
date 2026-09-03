@@ -1,0 +1,3605 @@
+{
+  "datasets": [
+    {
+      "name": "sales_overview",
+      "displayName": "Sales Overview",
+      "config": {
+        "source": "`end-to-end_pipeline`.gold.fact_sales",
+        "measures": [
+          {
+            "name": "total_revenue",
+            "expr": "SUM(net_revenue)",
+            "displayName": "Total Revenue",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              },
+              "abbreviation": "compact"
+            }
+          },
+          {
+            "name": "total_cost",
+            "expr": "SUM(total_cost)",
+            "displayName": "Total Cost",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              },
+              "abbreviation": "compact"
+            }
+          },
+          {
+            "name": "total_profit",
+            "expr": "SUM(profit)",
+            "displayName": "Total Profit",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              },
+              "abbreviation": "compact"
+            }
+          },
+          {
+            "name": "total_orders",
+            "expr": "COUNT(DISTINCT order_id)",
+            "displayName": "Total Orders",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            }
+          },
+          {
+            "name": "units_sold",
+            "expr": "SUM(quantity)",
+            "displayName": "Units Sold",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            }
+          },
+          {
+            "name": "total_customers",
+            "expr": "COUNT(DISTINCT customer_id)",
+            "displayName": "Total Customers",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            }
+          },
+          {
+            "name": "avg_order_value",
+            "expr": "MEASURE(total_revenue) / MEASURE(total_orders)",
+            "displayName": "Avg Order Value",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              },
+              "abbreviation": "compact"
+            }
+          },
+          {
+            "name": "profit_margin_pct",
+            "expr": "MEASURE(total_profit) / MEASURE(total_revenue)",
+            "displayName": "Profit Margin",
+            "format": {
+              "type": "percentage",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 1.0
+              }
+            }
+          },
+          {
+            "name": "monthly_revenue",
+            "expr": "SUM(net_revenue)",
+            "displayName": "Monthly Revenue",
+            "window": [
+              {
+                "order": "order_month",
+                "range": "current",
+                "semiadditive": "last"
+              }
+            ]
+          },
+          {
+            "name": "monthly_revenue_prev",
+            "expr": "SUM(net_revenue)",
+            "displayName": "Previous Month Revenue",
+            "window": [
+              {
+                "order": "order_month",
+                "range": "current",
+                "offset": "-1 month",
+                "semiadditive": "last"
+              }
+            ]
+          },
+          {
+            "name": "monthly_profit",
+            "expr": "SUM(profit)",
+            "displayName": "Monthly Profit",
+            "window": [
+              {
+                "order": "order_month",
+                "range": "current",
+                "semiadditive": "last"
+              }
+            ]
+          },
+          {
+            "name": "monthly_profit_prev",
+            "expr": "SUM(profit)",
+            "displayName": "Previous Month Profit",
+            "window": [
+              {
+                "order": "order_month",
+                "range": "current",
+                "offset": "-1 month",
+                "semiadditive": "last"
+              }
+            ]
+          },
+          {
+            "name": "monthly_revenue_py",
+            "expr": "SUM(net_revenue)",
+            "displayName": "Same Month Last Year Revenue",
+            "window": [
+              {
+                "order": "order_month",
+                "range": "current",
+                "offset": "-1 year",
+                "semiadditive": "last"
+              }
+            ]
+          },
+          {
+            "name": "monthly_profit_py",
+            "expr": "SUM(profit)",
+            "displayName": "Same Month Last Year Profit",
+            "window": [
+              {
+                "order": "order_month",
+                "range": "current",
+                "offset": "-1 year",
+                "semiadditive": "last"
+              }
+            ]
+          },
+          {
+            "name": "revenue_mom_pct",
+            "expr": "(MEASURE(monthly_revenue) - MEASURE(monthly_revenue_prev)) / MEASURE(monthly_revenue_prev)",
+            "displayName": "Revenue MoM %",
+            "format": {
+              "type": "percentage",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          },
+          {
+            "name": "profit_mom_pct",
+            "expr": "(MEASURE(monthly_profit) - MEASURE(monthly_profit_prev)) / MEASURE(monthly_profit_prev)",
+            "displayName": "Profit MoM %",
+            "format": {
+              "type": "percentage",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          },
+          {
+            "name": "revenue_yoy_pct",
+            "expr": "(MEASURE(monthly_revenue) - MEASURE(monthly_revenue_py)) / MEASURE(monthly_revenue_py)",
+            "displayName": "Revenue YoY %",
+            "format": {
+              "type": "percentage",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          },
+          {
+            "name": "profit_yoy_pct",
+            "expr": "(MEASURE(monthly_profit) - MEASURE(monthly_profit_py)) / MEASURE(monthly_profit_py)",
+            "displayName": "Profit YoY %",
+            "format": {
+              "type": "percentage",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          },
+          {
+            "name": "return_rate_pct",
+            "expr": "COUNT(order_status)",
+            "displayName": "Return Rate Pct"
+          }
+        ],
+        "version": "1.1",
+        "dimensions": [
+          {
+            "name": "order_date",
+            "expr": "order_date",
+            "displayName": "Order Date"
+          },
+          {
+            "name": "order_year",
+            "expr": "YEAR(order_date)",
+            "displayName": "Order Year"
+          },
+          {
+            "name": "order_month",
+            "expr": "DATE_TRUNC('month', order_date)",
+            "displayName": "Order Month",
+            "format": {
+              "type": "date",
+              "dateFormat": "locale_short_month"
+            }
+          },
+          {
+            "name": "order_quarter",
+            "expr": "QUARTER(order_date)",
+            "displayName": "Quarter"
+          },
+          {
+            "name": "store_name",
+            "expr": "stores.store_name",
+            "displayName": "Store"
+          },
+          {
+            "name": "category",
+            "expr": "products.category",
+            "displayName": "Product Category"
+          },
+          {
+            "name": "product_name",
+            "expr": "products.product_name",
+            "displayName": "Product Name"
+          },
+          {
+            "name": "region",
+            "expr": "stores.region",
+            "displayName": "Region"
+          },
+          {
+            "name": "order_status",
+            "expr": "order_status",
+            "displayName": "Order Status"
+          },
+          {
+            "expr": "products.dim_supplier.*"
+          },
+          {
+            "expr": "products.dim_supplier.* EXCEPT (supplier_id, supplier_name, supplier_category, country, lead_time_days, supplier_rating, contract_start_date, contract_year, active_status)"
+          },
+          {
+            "expr": "dim_customer.* EXCEPT (country)"
+          },
+          {
+            "name": "discount_band",
+            "expr": "CASE\n  WHEN source.discount_pct = 0 THEN 'No Discount'\n  WHEN source.discount_pct <= 0.10 THEN '1-10%'\n  WHEN source.discount_pct <= 0.20 THEN '11-20%'\n  ELSE '20%+'\nEND",
+            "displayName": "Discount Band"
+          }
+        ],
+        "joins": [
+          {
+            "name": "products",
+            "source": "`end-to-end_pipeline`.gold.dim_product",
+            "on": "source.product_id = products.product_id",
+            "joins": [
+              {
+                "name": "dim_supplier",
+                "source": "`end-to-end_pipeline`.gold.dim_supplier",
+                "on": "products.supplier_id = dim_supplier.supplier_id"
+              }
+            ]
+          },
+          {
+            "name": "stores",
+            "source": "`end-to-end_pipeline`.gold.dim_store",
+            "on": "source.store_id = stores.store_id"
+          },
+          {
+            "name": "dim_date",
+            "source": "`end-to-end_pipeline`.gold.dim_date",
+            "on": "source.order_date = dim_date.date"
+          },
+          {
+            "name": "dim_customer",
+            "source": "`end-to-end_pipeline`.gold.dim_customer",
+            "on": "source.customer_id = dim_customer.customer_id"
+          }
+        ]
+      }
+    },
+    {
+      "name": "top_5_products_by_revenue",
+      "displayName": "Top 5 Products by Revenue",
+      "queryLines": [
+        "SELECT\n",
+        "  p.product_name,\n",
+        "  p.category,\n",
+        "  s.region,\n",
+        "  YEAR(f.order_date) AS order_year,\n",
+        "  c.customer_segment,\n",
+        "  c.loyalty_status,\n",
+        "  SUM(f.net_revenue) AS total_revenue,\n",
+        "  SUM(f.profit) AS total_profit,\n",
+        "  SUM(f.profit) * 1.0 / NULLIF(SUM(f.net_revenue), 0) AS profit_margin_pct,\n",
+        "  SUM(f.quantity) AS units_sold\n",
+        "FROM\n",
+        "  `end-to-end_pipeline`.gold.fact_sales f\n",
+        "    INNER JOIN `end-to-end_pipeline`.gold.dim_product p\n",
+        "      ON f.product_id = p.product_id\n",
+        "    INNER JOIN `end-to-end_pipeline`.gold.dim_store s\n",
+        "      ON f.store_id = s.store_id\n",
+        "    INNER JOIN `end-to-end_pipeline`.gold.dim_customer c\n",
+        "      ON f.customer_id = c.customer_id\n",
+        "WHERE\n",
+        "  p.product_name IS NOT NULL\n",
+        "  AND (\n",
+        "    :order_year IS NULL\n",
+        "    OR YEAR(f.order_date) IN (\n",
+        "      SELECT\n",
+        "        EXPLODE(:order_year)\n",
+        "    )\n",
+        "  )\n",
+        "  AND (\n",
+        "    :category IS NULL\n",
+        "    OR p.category IN (\n",
+        "      SELECT\n",
+        "        EXPLODE(:category)\n",
+        "    )\n",
+        "  )\n",
+        "  AND (\n",
+        "    :region IS NULL\n",
+        "    OR s.region IN (\n",
+        "      SELECT\n",
+        "        EXPLODE(:region)\n",
+        "    )\n",
+        "  )\n",
+        "  AND (\n",
+        "    :customer_segment IS NULL\n",
+        "    OR c.customer_segment IN (\n",
+        "      SELECT\n",
+        "        EXPLODE(:customer_segment)\n",
+        "    )\n",
+        "  )\n",
+        "  AND (\n",
+        "    :loyalty_status IS NULL\n",
+        "    OR c.loyalty_status IN (\n",
+        "      SELECT\n",
+        "        EXPLODE(:loyalty_status)\n",
+        "    )\n",
+        "  )\n",
+        "GROUP BY\n",
+        "  p.product_name,\n",
+        "  p.category,\n",
+        "  s.region,\n",
+        "  order_year,\n",
+        "  c.customer_segment,\n",
+        "  c.loyalty_status\n",
+        "QUALIFY\n",
+        "  DENSE_RANK() OVER (ORDER BY total_revenue DESC) <= 5\n",
+        "ORDER BY\n",
+        "  total_revenue DESC"
+      ],
+      "parameters": [
+        {
+          "displayName": "Order Year",
+          "keyword": "order_year",
+          "dataType": "INTEGER",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "Product Category",
+          "keyword": "category",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "Region",
+          "keyword": "region",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "Customer Segment",
+          "keyword": "customer_segment",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "Loyalty Status",
+          "keyword": "loyalty_status",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "revenue_funnel",
+      "displayName": "Revenue Funnel",
+      "queryLines": [
+        "WITH metrics AS (\n",
+        "  SELECT\n",
+        "    SUM(net_revenue) AS total_revenue,\n",
+        "    SUM(total_cost) AS total_cost,\n",
+        "    SUM(profit) AS total_profit\n",
+        "  FROM\n",
+        "    `end-to-end_pipeline`.gold.fact_sales\n",
+        ")\n",
+        "SELECT\n",
+        "  'Revenue' AS stage,\n",
+        "  1 AS stage_order,\n",
+        "  total_revenue AS value\n",
+        "FROM\n",
+        "  metrics\n",
+        "UNION ALL\n",
+        "SELECT\n",
+        "  'Cost' AS stage,\n",
+        "  2 AS stage_order,\n",
+        "  total_cost AS value\n",
+        "FROM\n",
+        "  metrics\n",
+        "UNION ALL\n",
+        "SELECT\n",
+        "  'Profit' AS stage,\n",
+        "  3 AS stage_order,\n",
+        "  total_profit AS value\n",
+        "FROM\n",
+        "  metrics\n",
+        "ORDER BY\n",
+        "  stage_order"
+      ]
+    },
+    {
+      "name": "regional_yoy_growth",
+      "displayName": "Regional YoY Revenue Growth",
+      "queryLines": [
+        "-- Analysis: Regional YoY Revenue Growth\n",
+        "-- Purpose:\n",
+        "-- Measures year-over-year revenue growth by region\n",
+        "-- to identify growing and declining regional markets.\n",
+        "WITH regional_yearly_revenue AS (\n",
+        "  SELECT\n",
+        "    YEAR(f.order_date) AS sales_year,\n",
+        "    s.region,\n",
+        "    SUM(f.net_revenue) AS total_revenue\n",
+        "  FROM\n",
+        "    `end-to-end_pipeline`.gold.fact_sales f\n",
+        "      INNER JOIN `end-to-end_pipeline`.gold.dim_store s\n",
+        "        ON f.store_id = s.store_id\n",
+        "  WHERE\n",
+        "    (:order_quarter IS NULL OR array_contains(:order_quarter, QUARTER(f.order_date)))\n",
+        "    AND (:store_name IS NULL OR array_contains(:store_name, s.store_name))\n",
+        "  GROUP BY\n",
+        "    YEAR(f.order_date),\n",
+        "    s.region\n",
+        "),\n",
+        "regional_growth AS (\n",
+        "  SELECT\n",
+        "    sales_year,\n",
+        "    region,\n",
+        "    total_revenue,\n",
+        "    LAG(total_revenue) OVER (PARTITION BY region ORDER BY sales_year) AS previous_year_revenue\n",
+        "  FROM\n",
+        "    regional_yearly_revenue\n",
+        ")\n",
+        "SELECT\n",
+        "  sales_year,\n",
+        "  region,\n",
+        "  ROUND(total_revenue, 2) AS total_revenue,\n",
+        "  ROUND(previous_year_revenue, 2) AS previous_year_revenue,\n",
+        "  ROUND(\n",
+        "    ((total_revenue - previous_year_revenue) / NULLIF(previous_year_revenue, 0)) * 100,\n",
+        "    2\n",
+        "  ) AS revenue_growth_yoy_pct,\n",
+        "  CASE WHEN revenue_growth_yoy_pct >= 0 THEN 'Positive' ELSE 'Negative' END AS growth_category\n",
+        "FROM\n",
+        "  regional_growth\n",
+        "WHERE\n",
+        "  previous_year_revenue IS NOT NULL\n",
+        "  AND sales_year = (SELECT MAX(sales_year) FROM regional_growth WHERE previous_year_revenue IS NOT NULL)\n",
+        "ORDER BY\n",
+        "  sales_year,\n",
+        "  revenue_growth_yoy_pct DESC"
+      ],
+      "parameters": [
+        {
+          "displayName": "Quarter",
+          "keyword": "order_quarter",
+          "dataType": "INTEGER",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "Store",
+          "keyword": "store_name",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        }
+      ],
+      "catalog": "end-to-end_pipeline",
+      "schema": "gold"
+    },
+    {
+      "name": "64cc323e",
+      "displayName": "fact_sales",
+      "config": {
+        "version": "1.1",
+        "source": "`end-to-end_pipeline`.gold.fact_sales",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "e44aa4cc",
+      "displayName": "dim_product",
+      "config": {
+        "version": "1.1",
+        "source": "`end-to-end_pipeline`.gold.dim_product",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "837810f3",
+      "displayName": "dim_customer",
+      "config": {
+        "version": "1.1",
+        "source": "`end-to-end_pipeline`.gold.dim_customer",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "506a15ba",
+      "displayName": "dim_date",
+      "config": {
+        "version": "1.1",
+        "source": "`end-to-end_pipeline`.gold.dim_date",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "183d19e0",
+      "displayName": "dim_store",
+      "config": {
+        "version": "1.1",
+        "source": "`end-to-end_pipeline`.gold.dim_store",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "c5aba8e7",
+      "displayName": "dim_supplier",
+      "config": {
+        "version": "1.1",
+        "source": "`end-to-end_pipeline`.gold.dim_supplier",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "af0ac61f",
+      "displayName": "Monthly Net Revenue Trend",
+      "queryLines": [
+        "\n",
+        "SELECT\n",
+        "    d.year,\n",
+        "    d.month_number,\n",
+        "    d.month_name,\n",
+        "    ROUND(SUM(f.net_revenue), 2) AS total_revenue\n",
+        "FROM `end-to-end_pipeline`.`gold`.`fact_sales` f\n",
+        "INNER JOIN `end-to-end_pipeline`.`gold`.`dim_date` d\n",
+        "    ON f.order_date = d.date\n",
+        "GROUP BY d.year, d.month_number, d.month_name\n",
+        "ORDER BY d.year, d.month_number\n"
+      ]
+    }
+  ],
+  "relationshipGraphs": [
+    {
+      "sources": [
+        {
+          "name": "Sales_Overview",
+          "datasetName": "sales_overview"
+        },
+        {
+          "name": "Top_5_Products_by_Revenue",
+          "datasetName": "top_5_products_by_revenue"
+        },
+        {
+          "name": "Revenue_Funnel",
+          "datasetName": "revenue_funnel"
+        },
+        {
+          "name": "Regional_YoY_Revenue_Growth",
+          "datasetName": "regional_yoy_growth"
+        },
+        {
+          "name": "fact_sales",
+          "datasetName": "64cc323e"
+        },
+        {
+          "name": "dim_product",
+          "datasetName": "e44aa4cc"
+        },
+        {
+          "name": "dim_customer",
+          "datasetName": "837810f3"
+        },
+        {
+          "name": "dim_date",
+          "datasetName": "506a15ba"
+        },
+        {
+          "name": "dim_store",
+          "datasetName": "183d19e0"
+        },
+        {
+          "name": "dim_supplier",
+          "datasetName": "c5aba8e7"
+        }
+      ],
+      "relationships": [
+        {
+          "name": "fact_sales_dim_product",
+          "from": "fact_sales",
+          "to": "dim_product",
+          "on": "`fact_sales`.`product_id` = `dim_product`.`product_id`",
+          "cardinality": "CARDINALITY_MANY_TO_ONE"
+        },
+        {
+          "name": "fact_sales_dim_customer",
+          "from": "fact_sales",
+          "to": "dim_customer",
+          "on": "`fact_sales`.`customer_id` = `dim_customer`.`customer_id`",
+          "cardinality": "CARDINALITY_MANY_TO_ONE"
+        },
+        {
+          "name": "fact_sales_dim_date",
+          "from": "fact_sales",
+          "to": "dim_date",
+          "on": "`fact_sales`.`order_date` = `dim_date`.`date`",
+          "cardinality": "CARDINALITY_MANY_TO_ONE"
+        },
+        {
+          "name": "fact_sales_dim_store",
+          "from": "fact_sales",
+          "to": "dim_store",
+          "on": "`fact_sales`.`store_id` = `dim_store`.`store_id`",
+          "cardinality": "CARDINALITY_MANY_TO_ONE"
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "a904e0df",
+      "displayName": "Executive Sales Overview",
+      "layout": [
+        {
+          "widget": {
+            "name": "header_title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# <span style=\"color: #8B5CF6;font-weight: 700;\">Retail Sales Performance Dashboard</span>\n",
+                "\n",
+                "<span style=\"color: #8B5CF6;font-size: 18px;\">Executive Sales Overview</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_year",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_order_year",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "order_year",
+                      "expression": "`order_year`"
+                    },
+                    {
+                      "name": "order_year_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Year",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "order_year",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_order_year"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 4,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_category",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_category",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "category",
+                      "expression": "`category`"
+                    },
+                    {
+                      "name": "category_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Product Category",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "category",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_category"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 4,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_region",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_region",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "region",
+                      "expression": "`region`"
+                    },
+                    {
+                      "name": "region_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Region",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "region",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_region"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 2,
+            "width": 4,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_revenue",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "measure(Sales_Overview__total_revenue)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": {
+                  "value": "Total Revenue",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Sales_Overview__total_revenue)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_cost",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "measure(total_cost)",
+                      "expression": "MEASURE(`total_cost`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Total Cost",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_cost)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 3,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_profit",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "measure(total_profit)",
+                      "expression": "MEASURE(`total_profit`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Total Profit",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_profit)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 3,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_margin",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "measure(profit_margin_pct)",
+                      "expression": "MEASURE(`profit_margin_pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Profit Margin %",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(profit_margin_pct)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_units",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "measure(units_sold)",
+                      "expression": "MEASURE(`units_sold`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Units Sold",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(units_sold)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 3,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_customers",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "measure(Sales_Overview__total_customers)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_customers`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Total Customers",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Sales_Overview__total_customers)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 10,
+            "y": 3,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "growth_revenue_mom",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "measure(Sales_Overview__revenue_mom_pct)",
+                      "expression": "MEASURE(`Sales_Overview`.`revenue_mom_pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size:10px\">Revenue MoM</span><span style=\"font-size: 10px;\">%</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Sales_Overview__revenue_mom_pct)",
+                  "rowNumber": 0,
+                  "style": {
+                    "fontSize": 12
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "growth_profit_mom",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "measure(Sales_Overview__profit_mom_pct)",
+                      "expression": "MEASURE(`Sales_Overview`.`profit_mom_pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 10px;\">Profit MoM %</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Sales_Overview__profit_mom_pct)",
+                  "rowNumber": 0,
+                  "style": {
+                    "fontSize": 12
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 5,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "growth_revenue_yoy",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "measure(Sales_Overview__revenue_yoy_pct)",
+                      "expression": "MEASURE(`Sales_Overview`.`revenue_yoy_pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 10px;\">Revenue YoY %</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Sales_Overview__revenue_yoy_pct)",
+                  "rowNumber": 0,
+                  "style": {
+                    "fontSize": 12
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 5,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "growth_profit_yoy",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "measure(Sales_Overview__profit_yoy_pct)",
+                      "expression": "MEASURE(`Sales_Overview`.`profit_yoy_pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 10px;\">Profit YoY %</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Sales_Overview__profit_yoy_pct)",
+                  "rowNumber": 0,
+                  "style": {
+                    "fontSize": 12
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 5,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "revenue_profit_trend",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Sales_Overview__order_year",
+                      "expression": "`Sales_Overview`.`order_year`"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_revenue)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_cost)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_cost`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_profit)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_profit`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 18px;font-weight: 700;\">Revenue, Cost &amp; Profit Trend</span>",
+                  "fields": []
+                }
+              },
+              "version": 1,
+              "mark": {
+                "layout": "group",
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  "#553F8A",
+                  "#401C98",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  }
+                ]
+              },
+              "style": {
+                "fontColor": {
+                  "light": "#000000",
+                  "dark": "#FFFFFF"
+                }
+              },
+              "widgetType": "combo",
+              "encodings": {
+                "y": {
+                  "primary": {
+                    "fields": [
+                      {
+                        "fieldName": "measure(Sales_Overview__total_revenue)",
+                        "displayName": "Revenue"
+                      },
+                      {
+                        "fieldName": "measure(Sales_Overview__total_cost)",
+                        "displayName": "Cost"
+                      }
+                    ]
+                  },
+                  "secondary": {
+                    "fields": [
+                      {
+                        "fieldName": "measure(Sales_Overview__total_profit)",
+                        "displayName": "Profit"
+                      }
+                    ]
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": false
+                },
+                "x": {
+                  "fieldName": "Sales_Overview__order_year",
+                  "displayName": "Year",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 6,
+            "width": 4,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "category_performance",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Sales_Overview__category",
+                      "expression": "`Sales_Overview`.`category`"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_revenue)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_cost)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_cost`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_profit)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_profit`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`Sales_Overview`.`category` IS NOT NULL"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 18px;font-weight: 700;\">Revenue, Cost & Profit by Category</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "style": {
+                "fontColor": {
+                  "light": "#000000",
+                  "dark": "#FFFFFF"
+                }
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  "#553F8A",
+                  "#401C98",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  }
+                ],
+                "layout": "group"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Sales_Overview__category",
+                  "axis": {
+                    "title": "Product Category"
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fields": [
+                    {
+                      "fieldName": "measure(Sales_Overview__total_revenue)",
+                      "displayName": "Revenue"
+                    },
+                    {
+                      "fieldName": "measure(Sales_Overview__total_cost)",
+                      "displayName": "Cost"
+                    },
+                    {
+                      "fieldName": "measure(Sales_Overview__total_profit)",
+                      "displayName": "Profit"
+                    }
+                  ],
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "regional_performance",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Sales_Overview__region",
+                      "expression": "`Sales_Overview`.`region`"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_revenue)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_cost)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_cost`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_profit)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_profit`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`Sales_Overview`.`region` IS NOT NULL"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-weight: 700;font-size: 18px;\">Revenue, Cost & Profit by Region</span>",
+                  "fields": []
+                }
+              },
+              "version": 1,
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  "#553F8A",
+                  "#401C98",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  }
+                ],
+                "layout": "group"
+              },
+              "style": {
+                "fontColor": {
+                  "light": "#000000",
+                  "dark": "#FFFFFF"
+                }
+              },
+              "widgetType": "combo",
+              "encodings": {
+                "y": {
+                  "primary": {
+                    "fields": [
+                      {
+                        "fieldName": "measure(Sales_Overview__total_revenue)",
+                        "displayName": "Revenue"
+                      },
+                      {
+                        "fieldName": "measure(Sales_Overview__total_cost)",
+                        "displayName": "Cost"
+                      },
+                      {
+                        "fieldName": "measure(Sales_Overview__total_profit)",
+                        "displayName": "Profit"
+                      }
+                    ]
+                  },
+                  "secondary": {
+                    "fields": []
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                },
+                "x": {
+                  "fieldName": "Sales_Overview__region",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 12,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "order_status_breakdown",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "measure(Sales_Overview__total_orders)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_orders`)"
+                    },
+                    {
+                      "name": "Sales_Overview__order_status",
+                      "expression": "`Sales_Overview`.`order_status`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`Sales_Overview`.`order_status` IN ('Completed', 'Cancelled', 'Returned')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 18px;\">Order Status Breakdown</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "mark": {
+                "colors": [
+                  "#14436B",
+                  "#C7A257",
+                  "#67CDFD"
+                ]
+              },
+              "style": {
+                "fontColor": {
+                  "light": "#000000",
+                  "dark": "#FFFFFF"
+                }
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "measure(Sales_Overview__total_orders)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    },
+                    "significantFigures": {
+                      "type": "all"
+                    }
+                  }
+                },
+                "color": {
+                  "fieldName": "Sales_Overview__order_status",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Completed",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 6
+                        }
+                      },
+                      {
+                        "value": "Cancelled",
+                        "color": "#553F8A"
+                      },
+                      {
+                        "value": "Returned",
+                        "color": "#401C98"
+                      }
+                    ]
+                  }
+                },
+                "label": {
+                  "show": true,
+                  "text": {
+                    "fieldName": "measure(Sales_Overview__total_orders)"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 4,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "ff2ffd99",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "sum(Revenue_Funnel__value)",
+                      "expression": "SUM(`Revenue_Funnel`.`value`)"
+                    },
+                    {
+                      "name": "Revenue_Funnel__stage",
+                      "expression": "`Revenue_Funnel`.`stage`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": {
+                  "value": "<span style=\"font-size: 18px;\">Revenue Funnel</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "style": {
+                "fontColor": {
+                  "light": "#000000",
+                  "dark": "#FFFFFF"
+                }
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  "#C7A257",
+                  "#67CDFD",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  }
+                ]
+              },
+              "widgetType": "funnel",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(Revenue_Funnel__value)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  },
+                  "displayName": "Amount"
+                },
+                "y": {
+                  "fieldName": "Revenue_Funnel__stage",
+                  "displayName": "Stage",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Revenue",
+                        "Cost",
+                        "Profit"
+                      ]
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 6,
+            "width": 4,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "a7064d28",
+      "displayName": "Product & Customer Analysis",
+      "layout": [
+        {
+          "widget": {
+            "name": "page_header",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# <span style=\"color: #8B5CF6;font-weight: 700;\">Product & Customer Analysis</span>\n",
+                "\n",
+                "<span style=\"color: #8B5CF6;\">Detailed performance breakdown by product and customer segment</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_year",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_order_year",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "order_year",
+                      "expression": "`order_year`"
+                    },
+                    {
+                      "name": "order_year_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/697ea53a330b4c5eb9ec9df1920a7a37_order_year",
+                "query": {
+                  "datasetName": "top_5_products_by_revenue",
+                  "parameters": [
+                    {
+                      "name": "order_year",
+                      "keyword": "order_year"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 15px;\">Year</span>",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "order_year",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_order_year"
+                  },
+                  {
+                    "parameterName": "order_year",
+                    "queryName": "parameter_dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/697ea53a330b4c5eb9ec9df1920a7a37_order_year"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 4,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_category",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_category",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "category",
+                      "expression": "`category`"
+                    },
+                    {
+                      "name": "category_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/697ea53a330b4c5eb9ec9df1920a7a37_category",
+                "query": {
+                  "datasetName": "top_5_products_by_revenue",
+                  "parameters": [
+                    {
+                      "name": "category",
+                      "keyword": "category"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 15px;\">Product Category</span>",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "category",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_category"
+                  },
+                  {
+                    "parameterName": "category",
+                    "queryName": "parameter_dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/697ea53a330b4c5eb9ec9df1920a7a37_category"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 4,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_region",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_region",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "region",
+                      "expression": "`region`"
+                    },
+                    {
+                      "name": "region_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/697ea53a330b4c5eb9ec9df1920a7a37_region",
+                "query": {
+                  "datasetName": "top_5_products_by_revenue",
+                  "parameters": [
+                    {
+                      "name": "region",
+                      "keyword": "region"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Region",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "region",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_region"
+                  },
+                  {
+                    "parameterName": "region",
+                    "queryName": "parameter_dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/697ea53a330b4c5eb9ec9df1920a7a37_region"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 2,
+            "width": 4,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "19d06d10",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "sum(Top_5_Products_by_Revenue__total_profit)",
+                      "expression": "SUM(`Top_5_Products_by_Revenue`.`total_profit`)"
+                    },
+                    {
+                      "name": "sum(Top_5_Products_by_Revenue__units_sold)",
+                      "expression": "SUM(`Top_5_Products_by_Revenue`.`units_sold`)"
+                    },
+                    {
+                      "name": "sum(Top_5_Products_by_Revenue__total_revenue)",
+                      "expression": "SUM(`Top_5_Products_by_Revenue`.`total_revenue`)"
+                    },
+                    {
+                      "name": "Top_5_Products_by_Revenue__product_name",
+                      "expression": "`Top_5_Products_by_Revenue`.`product_name`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 18px;\">Top 5 Products by Revenue</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "style": {
+                "fontColor": {
+                  "light": "#000000",
+                  "dark": "#FFFFFF"
+                }
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  "#401C98",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  }
+                ],
+                "layout": "group"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "fields": [
+                    {
+                      "fieldName": "sum(Top_5_Products_by_Revenue__total_revenue)",
+                      "displayName": "Total Revenue"
+                    },
+                    {
+                      "fieldName": "sum(Top_5_Products_by_Revenue__total_profit)",
+                      "displayName": "Total Profit"
+                    }
+                  ]
+                },
+                "y": {
+                  "fieldName": "Top_5_Products_by_Revenue__product_name",
+                  "displayName": "Product",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                },
+                "extra": [
+                  {
+                    "fieldName": "sum(Top_5_Products_by_Revenue__total_profit)",
+                    "displayName": "Profit Margin %"
+                  },
+                  {
+                    "fieldName": "sum(Top_5_Products_by_Revenue__units_sold)",
+                    "displayName": "Units Sold"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 7,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "customer_segment_chart",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "measure(Sales_Overview__total_customers)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_customers`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_orders)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_orders`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__profit_margin_pct)",
+                      "expression": "MEASURE(`Sales_Overview`.`profit_margin_pct`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_revenue)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_profit)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_profit`)"
+                    },
+                    {
+                      "name": "Sales_Overview__customer_segment",
+                      "expression": "`Sales_Overview`.`customer_segment`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`Sales_Overview`.`customer_segment` IS NOT NULL"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "ASC",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 18px;\">Customer Segment Performance</span>",
+                  "fields": []
+                }
+              },
+              "style": {
+                "fontColor": {
+                  "light": "#000000",
+                  "dark": "#FFFFFF"
+                }
+              },
+              "version": 3,
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  "#401C98"
+                ],
+                "layout": "group"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "fields": [
+                    {
+                      "fieldName": "measure(Sales_Overview__total_revenue)",
+                      "displayName": "Total Revenue"
+                    },
+                    {
+                      "fieldName": "measure(Sales_Overview__total_profit)",
+                      "displayName": "Total Profit"
+                    }
+                  ]
+                },
+                "y": {
+                  "fieldName": "Sales_Overview__customer_segment",
+                  "displayName": "Customer Segment",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "measure",
+                      "measure": {
+                        "fieldName": "measure(Sales_Overview__total_revenue)"
+                      }
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                },
+                "extra": [
+                  {
+                    "fieldName": "measure(Sales_Overview__total_customers)",
+                    "displayName": "Total Customers"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__total_orders)",
+                    "displayName": "Total Orders"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__profit_margin_pct)",
+                    "displayName": "Profit Margin %"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 3,
+            "width": 5,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "discount_impact",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "measure(Sales_Overview__profit_margin_pct)",
+                      "expression": "MEASURE(`Sales_Overview`.`profit_margin_pct`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_orders)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_orders`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__units_sold)",
+                      "expression": "MEASURE(`Sales_Overview`.`units_sold`)"
+                    },
+                    {
+                      "name": "Sales_Overview__discount_band",
+                      "expression": "`Sales_Overview`.`discount_band`"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_revenue)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_profit)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_profit`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`Sales_Overview`.`discount_band` IS NOT NULL"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 18px;\">Discount Impact on Revenue &amp; Profit</span>",
+                  "fields": []
+                }
+              },
+              "style": {
+                "fontColor": {
+                  "dark": "#FFFFFF",
+                  "light": "#000000"
+                }
+              },
+              "version": 3,
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  "#401C98"
+                ],
+                "layout": "group"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Sales_Overview__discount_band",
+                  "axis": {
+                    "title": "Discount Band"
+                  },
+                  "displayName": "Discount Band",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "No Discount",
+                        "1-10%",
+                        "11-20%",
+                        "20%+"
+                      ]
+                    }
+                  }
+                },
+                "y": {
+                  "fields": [
+                    {
+                      "fieldName": "measure(Sales_Overview__total_revenue)",
+                      "displayName": "Total Revenue"
+                    },
+                    {
+                      "fieldName": "measure(Sales_Overview__total_profit)",
+                      "displayName": "Total Profit"
+                    }
+                  ],
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": true
+                },
+                "extra": [
+                  {
+                    "fieldName": "measure(Sales_Overview__profit_margin_pct)",
+                    "displayName": "Profit Margin %"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__total_orders)",
+                    "displayName": "Total Orders"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__units_sold)",
+                    "displayName": "Units Sold"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "top_customer_performance",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Sales_Overview__customer_name",
+                      "expression": "`Sales_Overview`.`customer_name`"
+                    },
+                    {
+                      "name": "Sales_Overview__customer_segment",
+                      "expression": "`Sales_Overview`.`customer_segment`"
+                    },
+                    {
+                      "name": "Sales_Overview__loyalty_status",
+                      "expression": "`Sales_Overview`.`loyalty_status`"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_revenue)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_profit)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_profit`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_orders)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_orders`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__avg_order_value)",
+                      "expression": "MEASURE(`Sales_Overview`.`avg_order_value`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 18px;\">Top Customer Performance</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "Sales_Overview__customer_name",
+                    "useForSearch": true,
+                    "displayName": "Customer Name"
+                  },
+                  {
+                    "fieldName": "Sales_Overview__customer_segment",
+                    "displayName": "Customer Segment"
+                  },
+                  {
+                    "fieldName": "Sales_Overview__loyalty_status",
+                    "displayName": "Loyalty Status"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__total_revenue)"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__total_profit)"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__total_orders)"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__avg_order_value)"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 13
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "ce814e6a",
+      "displayName": "Trend & Regional Performance",
+      "layout": [
+        {
+          "widget": {
+            "name": "page_header",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# <span style=\"color:#8B5CF6;font-weight:700\">Trend & Regional Performance</span>\n",
+                "\n",
+                "<span style=\"color: #8B5CF6;font-size: 18px;\">Regional growth, profitability, and operational performance</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "regional_yoy_growth",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Regional_YoY_Revenue_Growth__total_revenue",
+                      "expression": "`Regional_YoY_Revenue_Growth`.`total_revenue`"
+                    },
+                    {
+                      "name": "Regional_YoY_Revenue_Growth__previous_year_revenue",
+                      "expression": "`Regional_YoY_Revenue_Growth`.`previous_year_revenue`"
+                    },
+                    {
+                      "name": "Regional_YoY_Revenue_Growth__sales_year",
+                      "expression": "`Regional_YoY_Revenue_Growth`.`sales_year`"
+                    },
+                    {
+                      "name": "Regional_YoY_Revenue_Growth__region",
+                      "expression": "`Regional_YoY_Revenue_Growth`.`region`"
+                    },
+                    {
+                      "name": "Regional_YoY_Revenue_Growth__revenue_growth_yoy_pct",
+                      "expression": "`Regional_YoY_Revenue_Growth`.`revenue_growth_yoy_pct`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Regional YoY Revenue Growth",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  "#EF4444",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  }
+                ],
+                "layout": "group"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Regional_YoY_Revenue_Growth__region",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "primary": {
+                    "fields": [
+                      {
+                        "fieldName": "Regional_YoY_Revenue_Growth__revenue_growth_yoy_pct"
+                      }
+                    ],
+                    "scale": {
+                      "type": "quantitative"
+                    },
+                    "format": {
+                      "type": "number-plain",
+                      "abbreviation": "none",
+                      "decimalPlaces": {
+                        "type": "exact",
+                        "places": 1
+                      }
+                    },
+                    "formatTemplate": "{{ @formatted }}%"
+                  },
+                  "secondary": {
+                    "fields": [],
+                    "scale": {
+                      "type": "quantitative"
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                },
+                "extra": [
+                  {
+                    "fieldName": "Regional_YoY_Revenue_Growth__total_revenue"
+                  },
+                  {
+                    "fieldName": "Regional_YoY_Revenue_Growth__previous_year_revenue"
+                  },
+                  {
+                    "fieldName": "Regional_YoY_Revenue_Growth__sales_year"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_year",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/739baa14922c42e68a1b641e5a60292b_sales_year",
+                "query": {
+                  "datasetName": "regional_yoy_growth",
+                  "fields": [
+                    {
+                      "name": "sales_year",
+                      "expression": "`sales_year`"
+                    },
+                    {
+                      "name": "sales_year_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Year"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "sales_year",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/739baa14922c42e68a1b641e5a60292b_sales_year"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_region",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/739baa14922c42e68a1b641e5a60292b_region",
+                "query": {
+                  "datasetName": "regional_yoy_growth",
+                  "fields": [
+                    {
+                      "name": "region",
+                      "expression": "`region`"
+                    },
+                    {
+                      "name": "region_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Region"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "region",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/739baa14922c42e68a1b641e5a60292b_region"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_quarter",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_order_quarter",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "order_quarter",
+                      "expression": "`order_quarter`"
+                    },
+                    {
+                      "name": "order_quarter_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/739baa14922c42e68a1b641e5a60292b_order_quarter",
+                "query": {
+                  "datasetName": "regional_yoy_growth",
+                  "parameters": [
+                    {
+                      "name": "order_quarter",
+                      "keyword": "order_quarter"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Quarter"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "order_quarter",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_order_quarter"
+                  },
+                  {
+                    "parameterName": "order_quarter",
+                    "queryName": "parameter_dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/739baa14922c42e68a1b641e5a60292b_order_quarter"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 2,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_store",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_store_name",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "store_name",
+                      "expression": "`store_name`"
+                    },
+                    {
+                      "name": "store_name_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/739baa14922c42e68a1b641e5a60292b_store_name",
+                "query": {
+                  "datasetName": "regional_yoy_growth",
+                  "parameters": [
+                    {
+                      "name": "store_name",
+                      "keyword": "store_name"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Store"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "store_name",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_store_name"
+                  },
+                  {
+                    "parameterName": "store_name",
+                    "queryName": "parameter_dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/739baa14922c42e68a1b641e5a60292b_store_name"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "store_performance",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Sales_Overview__store_name",
+                      "expression": "`Sales_Overview`.`store_name`"
+                    },
+                    {
+                      "name": "Sales_Overview__region",
+                      "expression": "`Sales_Overview`.`region`"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_revenue)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_profit)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_profit`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__profit_margin_pct)",
+                      "expression": "MEASURE(`Sales_Overview`.`profit_margin_pct`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_orders)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_orders`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`Sales_Overview`.`store_name` IS NOT NULL"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Store Performance"
+              },
+              "bandedRows": {
+                "enabled": true
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "Sales_Overview__store_name",
+                    "useForSearch": true,
+                    "contentAlignment": "left",
+                    "displayName": "Store Name"
+                  },
+                  {
+                    "fieldName": "Sales_Overview__region",
+                    "contentAlignment": "left",
+                    "displayName": "Region"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__total_revenue)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "USD",
+                      "abbreviation": "compact",
+                      "decimalPlaces": {
+                        "type": "max",
+                        "places": 1
+                      }
+                    },
+                    "headerAlignment": "right",
+                    "contentAlignment": "right",
+                    "displayName": "Total Revenue"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__total_profit)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "USD",
+                      "abbreviation": "compact",
+                      "decimalPlaces": {
+                        "type": "max",
+                        "places": 1
+                      }
+                    },
+                    "headerAlignment": "right",
+                    "contentAlignment": "right",
+                    "displayName": "Total Profit"
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__profit_margin_pct)",
+                    "format": {
+                      "type": "number-percent",
+                      "decimalPlaces": {
+                        "type": "exact",
+                        "places": 1
+                      }
+                    },
+                    "headerAlignment": "right",
+                    "contentAlignment": "right",
+                    "displayName": "Profit Margin %",
+                    "style": {
+                      "type": "basic",
+                      "rules": [
+                        {
+                          "condition": {
+                            "operand": {
+                              "type": "data-value",
+                              "value": "0.25"
+                            },
+                            "operator": ">="
+                          },
+                          "backgroundColor": "#1B3A2B",
+                          "foregroundColor": "#4ADE80"
+                        },
+                        {
+                          "condition": {
+                            "operand": {
+                              "type": "data-value",
+                              "value": "0.15"
+                            },
+                            "operator": ">="
+                          },
+                          "backgroundColor": "#3A351B",
+                          "foregroundColor": "#FACC15"
+                        },
+                        {
+                          "condition": {
+                            "operand": {
+                              "type": "data-value",
+                              "value": "0.15"
+                            },
+                            "operator": "<"
+                          },
+                          "backgroundColor": "#3A1B1B",
+                          "foregroundColor": "#F87171"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "fieldName": "measure(Sales_Overview__total_orders)",
+                    "format": {
+                      "type": "number-plain",
+                      "abbreviation": "compact",
+                      "decimalPlaces": {
+                        "type": "exact",
+                        "places": 0
+                      }
+                    },
+                    "headerAlignment": "right",
+                    "contentAlignment": "right",
+                    "displayName": "Total Orders"
+                  }
+                ],
+                "rowOrder": [
+                  {
+                    "by": "column-reversed",
+                    "field": {
+                      "index": 2
+                    }
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "72c2eaca",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Sales_Overview__country",
+                      "expression": "`Sales_Overview`.`country`"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_revenue)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_revenue`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_cost)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_cost`)"
+                    },
+                    {
+                      "name": "measure(Sales_Overview__total_profit)",
+                      "expression": "MEASURE(`Sales_Overview`.`total_profit`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 1,
+              "mark": {
+                "layout": "group",
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  "#401C98",
+                  "#6A0ECC",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  }
+                ]
+              },
+              "widgetType": "combo",
+              "encodings": {
+                "x": {
+                  "fieldName": "Sales_Overview__country",
+                  "axis": {
+                    "hideLabels": false
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Sweden",
+                        "Spain",
+                        "Poland",
+                        "Netherlands",
+                        "Italy",
+                        "Germany",
+                        "France",
+                        "Czech Republic",
+                        null
+                      ]
+                    }
+                  }
+                },
+                "y": {
+                  "primary": {
+                    "fields": [
+                      {
+                        "fieldName": "measure(Sales_Overview__total_revenue)"
+                      },
+                      {
+                        "fieldName": "measure(Sales_Overview__total_cost)"
+                      }
+                    ]
+                  },
+                  "secondary": {
+                    "fields": [
+                      {
+                        "fieldName": "measure(Sales_Overview__total_profit)"
+                      }
+                    ]
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "c9af2435",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {}
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 23,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "bdc4ee4a",
+            "queries": [
+              {
+                "name": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_country",
+                "query": {
+                  "datasetName": "sales_overview",
+                  "fields": [
+                    {
+                      "name": "country",
+                      "expression": "`country`"
+                    },
+                    {
+                      "name": "country_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "country",
+                    "queryName": "dashboards/01f1a6f37e6415859f22192d643fcf04/datasets/01f1a6f923721845bef8c8c4224a1dfb_country"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 2,
+            "width": 2,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": {
+        "light": "#FAFAFB",
+        "dark": "#000000"
+      },
+      "widgetBackgroundColor": {
+        "light": "#FFFFFF",
+        "dark": "#0A0A0A"
+      },
+      "widgetBorderColor": {
+        "dark": "#2A303C"
+      },
+      "fontColor": {
+        "light": "#11171C",
+        "dark": "#E8ECF0"
+      },
+      "selectionColor": {
+        "light": "#2272B4",
+        "dark": "#8ACAFF"
+      },
+      "visualizationColors": [
+        "#3B82F6",
+        "#F59E0B",
+        "#10B981",
+        "#22C55E",
+        "#EF4444",
+        "#8B5CF6",
+        "#EC4899",
+        "#F97316"
+      ],
+      "widgetHeaderAlignment": "LEFT",
+      "widgetPadding": 16,
+      "widgetMargin": 8,
+      "widgetCornerRadius": 8,
+      "widgetShadow": 0,
+      "fontSettings": {
+        "base": {
+          "fontFamily": "Inter",
+          "fontColor": {
+            "dark": "#F3F4F6"
+          }
+        },
+        "widgetTitle": {
+          "fontFamily": "Inter",
+          "fontColor": {
+            "dark": "#9CA3AF"
+          },
+          "fontSize": 10
+        },
+        "fieldTitle": {
+          "fontFamily": "Inter",
+          "fontColor": {
+            "dark": "#9CA3AF"
+          },
+          "fontSize": 10
+        },
+        "fieldValue": {
+          "fontFamily": "Inter",
+          "fontColor": {
+            "dark": "#F3F4F6"
+          },
+          "fontSize": 14
+        }
+      },
+      "gridLineColor": {
+        "dark": "#2A303C"
+      }
+    },
+    "applyModeEnabled": false
+  }
+}
