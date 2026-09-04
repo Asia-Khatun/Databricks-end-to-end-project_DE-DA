@@ -138,7 +138,7 @@ The Agent enables natural-language exploration of business data and can answer q
 
 The Agent was configured with the Gold tables, table relationships, business definitions, and analytical instructions.
 
-![Genie Agent](Genie_Agent.png)
+![Databricks Genie Agent](Databricks%20Genie%20AgentGenie%20Agent.png)
 
 ---
 
